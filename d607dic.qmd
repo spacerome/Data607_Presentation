@@ -1,0 +1,345 @@
+---
+title: "Machine Learning in Astronomy"
+author: "Anthony Josue Roman"
+format: revealjs
+theme: solarized
+transition: fade
+highlight_style: monokai
+editor: visual
+---
+
+## Introduction {.smaller}
+
+What is Machine Learning?
+
+-   A subfield of artificial intelligence that focuses on the development of algorithms that can learn from and make predictions or decisions based on data.
+
+-   Machine Learning is used in a variety of fields such as finance, healthcare, and astronomy.
+
+-   Three types of Machine Learning: supervised, unsupervised, and reinforcement learning.
+
+## Introduction {.smaller}
+
+Why Astronomy?
+
+-   Astronomy generates vast amounts of data (Petabytes) from telescopes.
+
+-   Manual analysis is infeasible.
+
+-   Opportunities for Machine Learning:
+
+    -   Classifying objects
+    -   Detecting anomalies
+    -   Making predictions
+
+::: {style="text-align: center;"}
+<img src="https://www.rc.fas.harvard.edu/wp-content/uploads/2011/10/Astro.jpg" alt="Astronomical Data" style="width: 45%; height: auto;"/>
+:::
+
+## Example of Astronomy Data {.smaller}
+
+```{r}
+# Example of a dynamic visualization for SDSS data
+library(ggplot2)
+
+# Simulate SDSS data points
+sdss_data <- data.frame(
+  x = rnorm(100, mean = 0, sd = 1),
+  y = rnorm(100, mean = 0, sd = 1),
+  galaxy_type = sample(c("Spiral", "Elliptical"), 100, replace = TRUE)
+)
+
+ggplot(sdss_data, aes(x = x, y = y, color = galaxy_type)) +
+  geom_point() +
+  labs(title = "Simulated SDSS Galaxy Data",
+       x = "Feature 1", y = "Feature 2") +
+  theme_minimal()
+```
+
+## Example of Astronomical Data (Uncleaned) {.smaller}
+
+-   An example of uncleaned data from the Hubble Space Telescope (FRB121102)
+
+::: {layout-ncol="2"}
+![](noisedata.png){width="30%"}
+
+![](frbnoise.png){width="30%"}
+:::
+
+## Example of Astronomical Data (Cleaned and Uncleaned) {.smaller}
+
+::: {layout-ncol="2"}
+![](Deneb.png){width="60%"}
+
+![](deneb_1.png){width="60%"}
+:::
+
+## Key Applications {.smaller}
+
+-   **Galaxy Classification:** Classifying galaxies based on their shapes and colors.
+
+-   **Exoplanet Discoveries:** Detecting planets outside of our solar system.
+
+-   **Gravitational Wave Detection:** Detecting gravitational waves from colliding black holes (LIGO)
+
+-   **Star Formation Analysis:** Clustering stars and analyzing regions in nebulae.
+
+-   **Redshift Estimation:** Estimating the distance of galaxies from Earth.
+
+## Case Study - Exoplanet Discovery {.smaller}
+
+-   **Problem:** Distinguishing true planetary signals from noise.
+
+-   **Data Source:** Light curves from Kepler Space Telescope and TESS.
+
+-   **Machine Learning Approach:**
+
+    -   Preprocessing: Clean and normalize data.
+    -   Model: Use a binary classifier to predict "planet" or "not planet".
+
+-   **Results:** Achieved high accuracy in detecting exoplanets.
+
+## Case Study - Exoplanet Discovery {.smaller}
+
+```{r}
+library(rpart)
+library(rpart.plot)
+
+# Simulate decision tree for exoplanet detection
+set.seed(42)
+planet_data <- data.frame(
+  Brightness = rnorm(100, mean = 1, sd = 0.2),
+  Variability = rnorm(100, mean = 0.5, sd = 0.1),
+  Planet = sample(c("Yes", "No"), 100, replace = TRUE)
+)
+
+# Build a decision tree model
+tree <- rpart(Planet ~ Brightness + Variability, data = planet_data, method = "class")
+rpart.plot(tree, main = "Decision Tree for Exoplanet Detection")
+```
+
+## Exoplanet Discovery: Light Curve Analysis {.smaller}
+
+```{r}
+# Simulate light curve data
+time <- seq(0, 30, length.out = 500)
+flux <- 1 - 0.01 * (abs(sin(time)) > 0.9)
+
+# Plot the light curve
+library(ggplot2)
+ggplot(data.frame(time, flux), aes(x = time, y = flux)) +
+  geom_line(color = "blue") +
+  labs(title = "Simulated Light Curve with Planetary Transit",
+       x = "Time (days)", y = "Flux (normalized)") +
+  theme_minimal()
+```
+
+## Case Study - Galaxy Classification {.smaller}
+
+-   **Problem:** Classifying galaxies based on their shapes and colors.
+
+-   **Data Source:** Sloan Digital Sky Survey (SDSS) images.
+
+-   **Machine Learning Approach:**
+
+    -   Preprocessing: Extract features from images.
+    -   Model: Use a convolutional neural network (CNN) for classification.
+
+-   **Results:** Achieved high accuracy in classifying galaxies.
+
+## Machine Learning Techniques in Astronomy {.smaller}
+
+-   **Supervised Learning:** Training a model on labeled data to make predictions.
+
+-   **Unsupervised Learning:** Finding patterns in data without labels.
+
+-   **Deep Learning:** Using neural networks to learn complex patterns.
+
+    -   Complex Neural Networks: Convolutional Neural Networks (CNNs) for image data.
+    -   Recurrent Neural Networks (RNNs) for time series data or light curves.
+
+-   **Time Series Analysis:** Analyzing periodicity in variable stars.
+
+## Case Study - Galaxy Classification {.smaller}
+
+```{r}
+# Simulate model performance data
+model_data <- data.frame(
+  Model = c("SVM", "CNN", "Random Forest", "Logistic Regression"),
+  Accuracy = c(88, 95, 85, 78)
+)
+
+ggplot(model_data, aes(x = reorder(Model, -Accuracy), y = Accuracy, fill = Model)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Galaxy Classification Model Accuracy",
+       x = "Model", y = "Accuracy (%)") +
+  theme_minimal()
+```
+
+## Galaxy Classification Workflow {.smaller}
+
+![](galaxy_workflow.png){fig-align="center"}
+
+## Galaxy Classification Workflow {.smaller}
+
+::: {style="text-align: center;"}
+```{mermaid}
+graph TD
+  DataCollection["Data Collection"]:::data
+  Preprocessing["Preprocessing"]:::preprocess
+  ModelTraining["Model Training"]:::training
+  Prediction["Prediction"]:::predict
+  Insights["Astronomical Insights"]:::insight
+
+  classDef data fill:#D5E8D4,stroke:#82B366,stroke-width:2px;
+  classDef preprocess fill:#FFE6CC,stroke:#FF9900,stroke-width:2px;
+  classDef training fill:#E1D5E7,stroke:#6C3483,stroke-width:2px;
+  classDef predict fill:#D9EAD3,stroke:#38761D,stroke-width:2px;
+  classDef insight fill:#FFF2CC,stroke:#BF9000,stroke-width:2px;
+  classDef center text-align:center;
+
+  DataCollection["Data Collection"]:::data --> Preprocessing["Preprocessing"]:::preprocess
+  Preprocessing --> ModelTraining["Model Training"]:::training
+  ModelTraining --> Prediction["Prediction"]:::predict
+  Prediction --> Insights["Astronomical Insights"]:::insight
+```
+:::
+
+## ML Techniques in Astronomy: Supervised Learning {.smaller}
+
+```{r}
+library(ggplot2)
+
+# Simulate supervised and unsupervised data
+data <- data.frame(
+  x = c(rnorm(50, mean = 1), rnorm(50, mean = 4)),
+  y = c(rnorm(50, mean = 1), rnorm(50, mean = 4)),
+  label = factor(rep(c("Class A", "Class B"), each = 50))
+)
+
+# Supervised learning visualization
+ggplot(data, aes(x = x, y = y, color = label)) +
+  geom_point(size = 3) +
+  labs(title = "Supervised Learning", x = "Feature 1", y = "Feature 2") +
+  theme_minimal()
+```
+
+## ML Techniques in Astronomy: Unsupervised Learning {.smaller}
+
+```{r}
+# Unsupervised clustering visualization
+data$label <- NULL  # Remove labels for unsupervised learning
+ggplot(data, aes(x = x, y = y)) +
+  geom_point(size = 3, color = "blue") +
+  labs(title = "Unsupervised Learning", x = "Feature 1", y = "Feature 2") +
+  theme_minimal()
+```
+
+## Tools and Technologies {.smaller}
+
+```{r}
+library(knitr)
+
+kable(data.frame(
+  Tool = c("Python", "TensorFlow", "AstroML", "Astropy", "Lightkurve"),
+  Description = c("General-purpose programming", "Deep learning framework", 
+                  "Machine learning for astronomy", "Astronomical data analysis",
+                  "Light curve analysis for exoplanets"),
+  Use_Case = c("Data scripting", "Model development", "ML utilities", 
+               "Data analysis", "Light curve analysis"),
+  Project = c("Kepler Analysis", "Galaxy Classification", "Supernova Detection", 
+              "Gaia Star Catalog", "TESS Data"),
+  Skill = c("Easy", "Intermediate", "Advanced", "Intermediate", "Easy")
+), col.names = c("Tool", "Description", "Use Case", "Project", "Skill"))
+
+
+```
+
+## Tools and Technologies {.smaller}
+
+```{r}
+library(ggplot2)
+
+# Simulate usage data
+tool_usage <- data.frame(
+  Tool = c("Python", "TensorFlow", "AstroML", "Astropy", "Lightkurve"),
+  Usage_Percentage = c(60, 20, 10, 5, 5)
+)
+
+ggplot(tool_usage, aes(x = reorder(Tool, -Usage_Percentage), y = Usage_Percentage, fill = Tool)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Popularity of Tools in Astronomy",
+       x = "Tool", y = "Usage (%)") +
+  theme_minimal()
+```
+
+## Challenges {.smaller}
+
+-   **Data Challenges:** Noise, incomplete data, high dimensionality
+
+-   **Model Challenges:** Overfitting, underfitting, interpretability
+
+-   **Computational Challenges:** Large datasets, computational resources
+
+-   **Ethical Challenges:** Bias, fairness, privacy, access and reproducibility
+
+## Future Directions {.smaller}
+
+-   **Real-Time Machine Learning:** Automating transient event detection (e.g. supernovae).
+
+-   **AI-Powered Telescopes**
+
+-   **Reinforcement Learning:** Mission planning for telescopes and satellites.
+
+## AI-Powered Telescopes {.smaller}
+
+-   Real-time transient event detection.
+-   Predicting unseen regions of the universe.
+-   Optimizing satellite missions with reinforcement learning.
+
+```{r}
+# Simulate a trajectory optimization graph
+time <- seq(0, 100, length.out = 100)
+trajectory <- sin(time / 10) + rnorm(100, 0, 0.1)
+
+ggplot(data.frame(time, trajectory), aes(x = time, y = trajectory)) +
+  geom_line(color = "purple") +
+  labs(title = "Simulated Trajectory Optimization",
+       x = "Time", y = "Optimized Path") +
+  theme_minimal()
+```
+
+## Summary {.smaller}
+
+-   **Machine Learning in Astronomy**: Revolutionizing data analysis with scalable, automated methods.
+-   **Case Studies**:
+    -   Exoplanet discovery using light curve analysis.
+    -   Galaxy classification with CNNs and SDSS data.
+-   **Techniques**: Supervised learning, unsupervised clustering, and deep learning.
+-   **Future Directions**:
+    -   AI-powered telescopes for real-time transient detection.
+    -   Reinforcement learning for satellite mission optimization.
+
+## Conclusion {.smaller}
+
+-   Machine Learning is a powerful tool for analyzing large astronomical datasets.
+
+-   It is also essential for exploring the vast universe.
+
+"The universe is under no oblication to make sense to you." - Neil deGrasse Tyson
+
+![](M103F.png){fig-align="center"}
+
+## References {.smaller}
+
+-   **Books**
+    1.  Ivezic, Z., Connolly, A. J., VanderPlas, J. T., & Gray, A. "AstroML: Machine Learning and Data Mining for Astronomy."\
+    2.  Ball, N., Brunner, R. J., & Myer, S. "Deep Learning for the Life Sciences."
+-   **Research Papers**
+    1.  Ball, N., & Brunner, R. J. "Machine Learning for Astronomy: A Practical Guide."\
+    2.  York, D. G., et al. "The Sloan Digital Sky Survey: Technical Summary."\
+    3.  Schawinski, K., Zhang, C., et al. "Deep Learning for Astronomical Image Classification."
+-   **Web Resources**
+    1.  AstroML Documentation: <http://www.astroml.org>\
+    2.  NASA Exoplanet Archive: <https://exoplanetarchive.ipac.caltech.edu>\
+    3.  Lightkurve Documentation: <https://docs.lightkurve.org>
